@@ -38,8 +38,8 @@ CREATE TABLE users (
   CONSTRAINT ck_users_position_by_status
     CHECK (
       CASE
-        WHEN user_status IN ('retired', 'left') THEN position_id IS NULL
-        WHEN user_status IN ('in_training', 'waiting_position')        THEN TRUE
+        WHEN user_status IN ('retired', 'left', 'waiting_position') THEN position_id IS NULL
+        WHEN user_status IN ('in_training')        THEN TRUE
         ELSE position_id IS NOT NULL
       END
     ),  
