@@ -19,6 +19,16 @@ CREATE TABLE departments (
   CONSTRAINT uq_departments_company_id UNIQUE (company_id, id)
 );
 
+CREATE TABLE ranks (
+  company_id BIGINT NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name TEXT NOT NULL,
+  rank_order INT NOT NULL,
+  
+  CONSTRAINT uq_rank_company_id 
+    UNIQUE (company_id, id)
+)
+  
 CREATE TABLE positions (
   company_id BIGINT NOT NULL REFERENCES companies(id) ON DELETE RESTRICT,
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -57,16 +67,13 @@ CREATE TABLE positions (
     CHECK (is_active OR NOT is_filled)
 );
 
-CREATE TABLE ranks (
-  company_id BIGINT NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
-  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name TEXT NOT NULL,
-  rank_order INT NOT NULL
-  
-  CONSTRAINT uq_rank_company_id 
-    UNIQUE (company_id, id),
-)
 
+
+
+CREATE INDEX ix_positions_department ON positions (company_id, department_id);
+CREATE INDEX ix_positions_parent ON positions (company_id, parent_position_id);
+
+COMMIT;
 
 CREATE INDEX ix_positions_department ON positions (company_id, department_id);
 CREATE INDEX ix_positions_parent ON positions (company_id, parent_position_id);
