@@ -84,24 +84,6 @@ CREATE TABLE position_history (
 );
 
 
-CREATE VIEW user_history AS
-SELECT 
-  ph.company_id AS company_id, 
-  u.employee_no AS employee_no,
-  u.first_name || ' ' || u.last_name AS user_name, 
-  d.name AS department_name, 
-  p.name AS position_name, 
-  ph.start_date AS position_start_date, 
-  ph.end_date AS position_end_date, 
-  ph.end_reason AS end_reason
-FROM position_history ph
-JOIN users u
-  ON u.company_id = ph.company_id AND u.id = ph.user_id
-JOIN positions p
-  ON p.company_id = ph.company_id AND p.id = ph.position_id
-JOIN departments d
-  ON d.company_id = ph.company_id AND d.id = p.department_id;
-
 CREATE INDEX ix_users_position             ON users (company_id, position_id);
 CREATE INDEX ix_position_history_user      ON position_history (company_id, user_id);
 CREATE INDEX ix_position_history_position  ON position_history (company_id, position_id);
